@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            box-sizing: content-box;
+        }
+        body{
+            margin: 0;
+            padding: 0;
+            display: grid;
+            height: 50vw;
+            align-content: center;
+            place-items: center;
+            background-color: rgb(102, 69, 132);
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        div.container{
+            border: 2px solid black;
+            background-color: rgb(60, 39, 79);
+            width: 40%;
+            padding: 2%;
+            height: auto;
+        }
+        div.question-box{
+            padding: 2%;
+            font-size: 2vw;
+            background-color: rgb(131, 106, 155);
+        }
+        strong{
+            margin-right: 2%;
+        }
+        div.answer-box{
+            display: grid;
+            grid-template-columns: auto auto;
+            row-gap: 1vw;
+            column-gap: 1vw;
+            background-color: aliceblue;
+            padding: 1vw;
+        }
+        div.answer-box div{
+            padding: 2%;
+            text-align: left;
+        }
+        div.answer-box div label{
+            padding: 0 1vw;
+            font-size: 1.5vw;
+        }
+        div.controls{
+            display: grid;
+            grid-template-columns: auto;
+            justify-content: center;
+            padding: 3% 0;
+            row-gap: 5%;
+
+        }
+        .btn{
+            width: 200%;
+            font-size: 1.5vw;
+            padding: 5% 10%;
+            cursor: pointer;
+            transform: translateX(-50%);
+
+        }
+        .hide{
+            display: none;
+        }
+        .total{
+            font-size: 2vw;
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="question-container hide" id="questions">
+            <div class="question-box" id="question">what's your question</div>
+            <div class="answer-box" id="answers">
+                <!-- <button class="answer1">answer1</button>
+                <button class="answer2">answer2</button>
+                <button class="answer3">answer3</button>
+                <button class="answer4">answer4</button> -->
+            </div>
+        </div>
+        <div class="controls">
+            <button class="start btn" id="start-btn">start</button>
+            <button class="next btn hide" id="next-btn" onclick="checkAns(),nextQuestion()">next</button>
+        </div>
+        <div id="score" class="total"></div>
+        <span id="correct"></span>
+    </div>
+    <script>
+        const question=[
+            {
+                q:'What is the capital of India?',
+                a:[
+                    {text: "mumbai", correct: false},
+                    {text: "jaipur", correct: false},
+                    {text: "new delhi", correct:true},
+                    {text: 'kolkata', correct:false}
+                ],
+            },
+            {
+                q:'What is the multiply of 10 and 15?',
+                a:[
+                    {text:"345", correct: false},
+                    {text:"234", correct: false},
+                    {text: "423",correct: false},
+                    {text:'150',correct: true}
+                ],
+            },
+            {
+                q:'What is the sum of 18 and 13?',
+                a:[
+                    {text:"31", correct: true},
+                    {text:"34", correct: false},
+                    {text: "65",correct:false},
+                    {text:'11',correct:false}
+                ],
+            },
+            {
+                q:'What is the 12*12?',
+                a:[
+                    {text:"123", correct: false},
+                    {text:"432", correct: false},
+                    {text: "144",correct:true},
+                    {text:'142',correct:false}
+                ],
+            },
+        ]
+        const startbtn=document.getElementById('start-btn');
+        const nextbtn = document.getElementById('next-btn');
+        const questionblock= document.getElementById('questions');
+        const questionbox=document.getElementById('question');
+        const answerbox = document.getElementById('answers');
+        let score=0;
+        let Index=0;
+        startbtn.addEventListener('click',startquiz);
+        function startquiz(){
+            questionblock.classList.remove('hide');
+            nextbtn.classList.remove('hide');
+            startbtn.classList.add('hide')
+            showQuestion(Index)
+        }
+        function showQuestion(Index){
+            questionbox.innerText=question[Index].q;
+            answerbox.innerHTML = ""
+            for(i=0;i<question[Index].a.length;i++){
+                let d = document.createElement('div');
+                let b = document.createElement('input');
+                let c = document.createElement('label');
+                b.value=i;
+                b.type='radio';
+                b.name='answer'
+                c.innerText=question[Index].a[i].text;
+                d.appendChild(b);
+                d.appendChild(c);
+                answerbox.appendChild(d);
+            }
+        }
+        function showScore(){
+            document.getElementById('score').innerText=`your Score is ${score}`;
+        }
+        function nextQuestion() {
+        if (Index < question.length - 1) {
+            Index=Index+1;
+            showQuestion(Index);
+        } else {
+            document.getElementById("answers").remove()
+            document.getElementById("question").remove()
+            document.getElementById("next-btn").remove()
+            showScore();
+        }
+        }
+        // nextbtn.addEventListener('click',checkAns)
+        function checkAns(){
+            const selectedAns = parseInt(document.querySelector('input[name="answer"]:checked').value);
+            console.log(selectedAns)
+            if(question[Index].a[selectedAns].correct){
+                score++;
+                nextQuestion();
+            }
+            else{
+                nextQuestion();
+            }
+        }
+//         function checkAns() {
+//     const selectedAns = parseInt(document.querySelector('input[name="answer"]:checked').value);
+//     console.log(selectedAns);
+ 
+//     if (Questions[currQuestion].a[selectedAns].isCorrect) {
+//         score++;
+//         console.log("Correct")
+//         nextQuestion();
+//     } else {
+//         nextQuestion();
+//     }
+// }
+    </script>
+</body>
+</html>
